@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>eCommerce Product Profit Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css">
+    <style>
+        body {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .dark {
+            background-color: #1a202c;
+            color: #f7fafc;
+        }
+        .input-field {
+            transition: all 0.3s ease;
+        }
+        .input-field:focus {
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+        }
+        .dark .input-field {
+            background-color: #2d3748;
+            color: #f7fafc;
+            border-color: #4a5568;
+        }
+        .dark .card {
+            background-color: #2d3748;
+            border-color: #4a5568;
+        }
+        .dark .shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .dark .text-gray-700 {
+            color: #e2e8f0;
+        }
+        .dark .text-gray-600 {
+            color: #e2e8f0;
+        }
+        .dark .bg-blue-500 {
+            background-color: #3182ce;
+        }
+        .dark .bg-green-500 {
+            background-color: #38a169;
+        }
+        .dark .bg-purple-500 {
+            background-color: #805ad5;
+        }
+        .dark .bg-gray-100 {
+            background-color: #2d3748;
+        }
+        .dark .border-gray-200 {
+            border-color: #4a5568;
+        }
+        .dark ::placeholder {
+            color: #a0aec0;
+        }
+        .card {
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        @media print {
+            .no-print {
+                display: none;
+            }
+        }
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: #d3d3d3;
+            outline: none;
+        }
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #4299e1;
+            cursor: pointer;
+        }
+        .dark .slider {
+            background: #4a5568;
+        }
+        .dark .slider::-webkit-slider-thumb {
+            background: #63b3ed;
+        }
+        /* Ensure Platform Fees input aligns with other inputs */
+        .platform-fees-container {
+            display: flex;
+            width: 100%;
+        }
+        .platform-fees-container select {
+            width: 40%; /* Adjust width to balance with input */
+            border-right: none;
+            border-radius: 0.25rem 0 0 0.25rem;
+            padding: 0.5rem 0.75rem;
+            height: 2.5rem; /* Match input height */
+        }
+        .platform-fees-container input {
+            flex-grow: 1;
+            border-radius: 0 0.25rem 0.25rem 0;
+            height: 2.5rem; /* Match select height */
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-blue-600">eCommerce Profit Calculator</h1>
+            <button id="toggleDarkMode" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                <i class='bx bx-moon text-2xl'></i>
+            </button>
+        </div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Input Section -->
+            <div class="card bg-white p-6 rounded-lg shadow border border-gray-200">
+                <h2 class="text-xl font-semibold mb-4 text-gray-800">Cost Breakdown</h2>
+                
+                <!-- Product Cost with Currency -->
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Product Cost</label>
+                    <div class="flex">
+                        <select id="currency" class="input-field bg-gray-100 border border-gray-300 rounded-l py-2 px-3 text-gray-700 focus:outline-none">
+                            <option value="$">$ USD</option>
+                            <option value="₹">₹ INR</option>
+                            <option value="€">€ EUR</option>
+                            <option value="£">£ GBP</option>
+                            <option value="¥">¥ JPY</option>
+                            <option value="A$">A$ AUD</option>
+                            <option value="C$">C$ CAD</option>
+                        </select>
+                        <input type="number" id="productCost" class="input-field flex-grow bg-gray-100 border border-gray-300 rounded-r py-2 px-3 text-gray-700 focus:outline-none" placeholder="0.00" min="0" step="0.01">
+                    </div>
+                </div>
+                
+                <!-- Other Costs -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-700 mb-2">Shipping Cost</label>
+                        <input type="number" id="shippingCost" class="input-field w-full bg-gray-100 border border-gray-300 rounded py-2 px-3 text-gray-700 focus:outline-none" placeholder="0.00" min="0" step="0.01">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 mb-2">Packaging Cost</label>
+                        <input type="number" id="packagingCost" class="input-field w-full bg-gray-100 border border-gray-300 rounded py-2 px-3 text-gray-700 focus:outline-none" placeholder="0.00" min="0" step="0.01">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 mb-2">Marketing/Ad Spend</label>
+                        <input type="number" id="marketingCost" class="input-field w-full bg-gray-100 border border-gray-300 rounded py-2 px-3 text-gray-700 focus:outline-none" placeholder="0.00" min="0" step="0.01">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 mb-2">Platform Fees</label>
+                        <div class="platform-fees-container">
+                            <select id="platformType" class="input-field bg-gray-100 border border-gray-300 text-gray-700 focus:outline-none text-sm">
+                                <option value="custom">Custom</option>
+                                <option value="amazon">Amazon (15%)</option>
+                                <option value="shopify">Shopify (2%)</option>
+                                <option value="etsy">Etsy (6.5%)</option>
+                                <option value="ebay">eBay (10%)</option>
+                                <option value="flipkart">Flipkart (5%)</option>
+                            </select>
+                            <input type="number" id="platformFee" class="input-field bg-gray-100 border border-gray-300 text-gray-700 focus:outline-none" placeholder="0.00" min="0" step="0.01">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 mb-2">Additional Costs</label>
+                        <input type="number" id="additionalCosts" class="input-field w-full bg-gray-100 border border-gray-300 rounded py-2 px-3 text-gray-700 focus:outline-none" placeholder="0.00" min="0" step="0.01">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 mb-2">Selling Price</label>
+                        <input type="number" id="sellingPrice" class="input-field w-full bg-gray-100 border border-gray-300 rounded py-2 px-3 text-gray-700 focus:outline-none" placeholder="0.00" min="0" step="0.01">
+                    </div>
+                </div>
+                
+                <!-- Tax & Fees Toggle -->
+                <div class="mt-6">
+                    <label class="flex items-center cursor-pointer">
+                        <div class="relative">
+                            <input type="checkbox" id="taxToggle" class="sr-only">
+                            <div class="block bg-gray-300 w-14 h-8 rounded-full"></div>
+                            <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition"></div>
+                        </div>
+                        <div class="ml-3 text-gray-700 font-medium">Include Tax & Fees</div>
+                    </label>
+                    
+                    <div id="taxSection" class="mt-4 hidden">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-gray-700 mb-2">Tax Type</label>
+                                <select id="taxType" class="input-field w-full bg-gray-100 border border-gray-300 rounded py-2 px-3 text-gray-700 focus:outline-none">
+                                    <option value="gst">GST (India)</option>
+                                    <option value="vat">VAT (Europe)</option>
+                                    <option value="sales">Sales Tax (US)</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-gray-700 mb-2">Tax Rate (%)</label>
+                                <input type="number" id="taxRate" class="input-field w-full bg-gray-100 border border-gray-300 rounded py-2 px-3 text-gray-700 focus:outline-none" placeholder="18" min="0" max="100" value="18">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Results Section -->
+            <div class="space-y-6">
+                <!-- Profit Calculation -->
+                <div class="card bg-white p-6 rounded-lg shadow border border-gray-200">
+                    <h2 class="text-xl font-semibold mb-4 text-gray-800">Profit Calculation</h2>
+                    
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Total Costs:</span>
+                            <span id="totalCosts" class="font-semibold">$0.00</span>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Tax Amount:</span>
+                            <span id="taxAmount" class="font-semibold">$0.00</span>
+                        </div>
+                        
+                        <div class="border-t border-gray-200 my-2 pt-2"></div>
+                        
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Revenue per Sale:</span>
+                            <span id="revenue" class="font-semibold">$0.00</span>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Profit per Product:</span>
+                            <span id="profitPerProduct" class="font-semibold">$0.00</span>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Profit Margin:</span>
+                            <span id="profitMargin" class="font-semibold">0%</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Profit Margin Visual Indicator -->
+                    <div class="mt-6">
+                        <div class="flex justify-between text-sm text-gray-600 mb-2">
+                            <span>0%</span>
+                            <span>25%</span>
+                            <span>50%</span>
+                            <span>75%</span>
+                            <span>100%</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden">
+                            <div id="profitMarginBar" class="bg-green-500 h-4 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Breakeven Analysis -->
+                <div class="card bg-white p-6 rounded-lg shadow border border-gray-200">
+                    <h2 class="text-xl font-semibold mb-4 text-gray-800">Breakeven Analysis</h2>
+                    
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Sales Needed to Break Even:</span>
+                            <span id="breakevenSales" class="font-semibold">0</span>
+                        </div>
+                        
+                        <div class="border-t border-gray-200 my-2 pt-2"></div>
+                        
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Suggested Price (20% margin):</span>
+                            <span id="price20" class="font-semibold">$0.00</span>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Suggested Price (30% margin):</span>
+                            <span id="price30" class="font-semibold">$0.00</span>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-600">Suggested Price (50% margin):</span>
+                            <span id="price50" class="font-semibold">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Interactive Profit Simulator -->
+        <div class="card bg-white p-6 rounded-lg shadow border border-gray-200 mt-8">
+            <h2 class="text-xl font-semibold mb-4 text-gray-800">Profit Simulator</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="font-medium text-gray-700 mb-3">Adjust Selling Price</h3>
+                    <input type="range" id="priceSlider" class="slider mb-2 w-full" min="0" max="1000" step="1" value="0">
+                    <div class="flex justify-between">
+                        <span id="minPrice" class="text-sm text-gray-600">$0</span>
+                        <span id="currentPriceSlider" class="text-sm font-semibold">$0</span>
+                        <span id="maxPrice" class="text-sm text-gray-600">$1000</span>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <div class="grid grid-cols-3 gap-2 text-center">
+                            <div class="bg-blue-100 p-2 rounded">
+                                <div class="text-sm text-blue-700">Cost</div>
+                                <div id="sliderCost" class="font-bold text-blue-800">$0</div>
+                            </div>
+                            <div class="bg-green-100 p-2 rounded">
+                                <div class="text-sm text-green-700">Profit</div>
+                                <div id="sliderProfit" class="font-bold text-green-800">$0</div>
+                            </div>
+                            <div class="bg-purple-100 p-2 rounded">
+                                <div class="text-sm text-purple-700">Margin</div>
+                                <div id="sliderMargin" class="font-bold text-purple-800">0%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="font-medium text-gray-700 mb-3">Monthly Sales Projection</h3>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label class="block text-gray-700 mb-2 text-sm">Estimated Units per Month</label>
+                            <input type="number" id="monthlySales" class="input-field w-full bg-gray-100 border border-gray-300 rounded py-2 px-3 text-gray-700 focus:outline-none" placeholder="100" min="1" value="100">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-2 text-sm">Fixed Monthly Expenses</label>
+                            <input type="number" id="fixedExpenses" class="input-field w-full bg-gray-100 border border-gray-300 rounded py-2 px-3 text-gray-700 focus:outline-none" placeholder="500" min="0" value="500">
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-100 p-4 rounded-lg">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <div class="text-sm text-gray-600">Monthly Revenue</div>
+                                <div id="monthlyRevenue" class="font-bold text-xl text-gray-800">$0</div>
+                            </div>
+                            <div>
+                                <div class="text-sm text-gray-600">Monthly Profit</div>
+                                <div id="monthlyProfit" class="font-bold text-xl text-gray-800">$0</div>
+                            </div>
+                            <div>
+                                <div class="text-sm text-gray-600">Annual Revenue</div>
+                                <div id="annualRevenue" class="font-bold text-xl text-gray-800">$0</div>
+                            </div>
+                            <div>
+                                <div class="text-sm text-gray-600">Annual Profit</div>
+                                <div id="annualProfit" class="font-bold text-xl text-gray-800">$0</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="mt-8 text-center text-gray-600 text-sm">
+            <p>Designed for eCommerce businesses to calculate product profitability and make informed pricing decisions.</p>
+            <p><B>Designed & Developed by The Frontier Ideas</B></p>
+        </div>
+    </div>
+    
+    <script>
+        // DOM Elements
+        const toggleDarkMode = document.getElementById('toggleDarkMode');
+        const taxToggle = document.getElementById('taxToggle');
+        const taxSection = document.getElementById('taxSection');
+        const platformType = document.getElementById('platformType');
+        const platformFee = document.getElementById('platformFee');
+        const priceSlider = document.getElementById('priceSlider');
+        const currentPriceSlider = document.getElementById('currentPriceSlider');
+        const taxType = document.getElementById('taxType');
+        const taxRate = document.getElementById('taxRate');
+
+        // Toggle Dark Mode
+        toggleDarkMode.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            const icon = toggleDarkMode.querySelector('i');
+            if (document.body.classList.contains('dark')) {
+                icon.classList.remove('bx-moon');
+                icon.classList.add('bx-sun');
+            } else {
+                icon.classList.remove('bx-sun');
+                icon.classList.add('bx-moon');
+            }
+        });
+
+        // Toggle Tax Section
+        taxToggle.addEventListener('change', () => {
+            if (taxToggle.checked) {
+                taxSection.classList.remove('hidden');
+                document.querySelector('.dot').style.transform = 'translateX(100%)';
+                document.querySelector('.block').classList.add('bg-blue-500');
+                document.querySelector('.block').classList.remove('bg-gray-300');
+            } else {
+                taxSection.classList.add('hidden');
+                document.querySelector('.dot').style.transform = 'translateX(0)';
+                document.querySelector('.block').classList.remove('bg-blue-500');
+                document.querySelector('.block').classList.add('bg-gray-300');
+            }
+            calculateAll();
+        });
+
+        // Platform Fee Presets
+        platformType.addEventListener('change', () => {
+            let feePercentage = 0;
+            switch (platformType.value) {
+                case 'amazon':
+                    feePercentage = 15;
+                    break;
+                case 'shopify':
+                    feePercentage = 2;
+                    break;
+                case 'etsy':
+                    feePercentage = 6.5;
+                    break;
+                case 'ebay':
+                    feePercentage = 10;
+                    break;
+                case 'flipkart':
+                    feePercentage = 5;
+                    break;
+                default:
+                    feePercentage = 0;
+            }
+            platformFee.value = feePercentage;
+            platformFee.disabled = platformType.value !== 'custom';
+            calculateAll();
+        });
+
+        // Price Slider
+        priceSlider.addEventListener('input', () => {
+            const value = parseFloat(priceSlider.value);
+            updatePriceSlider(value);
+            document.getElementById('sellingPrice').value = value.toFixed(2);
+            calculateAll();
+        });
+
+        function updatePriceSlider(value) {
+            const currency = document.getElementById('currency').value;
+            currentPriceSlider.textContent = `${currency}${value.toFixed(2)}`;
+
+            const totalCost = calculateTotalCosts();
+            document.getElementById('sliderCost').textContent = formatCurrency(totalCost);
+
+            const profit = value - totalCost;
+            document.getElementById('sliderProfit').textContent = formatCurrency(profit);
+
+            const margin = value > 0 ? (profit / value) * 100 : 0;
+            document.getElementById('sliderMargin').textContent = `${margin.toFixed(1)}%`;
+        }
+
+        // Calculate all values when inputs change
+        const inputFields = document.querySelectorAll('input[type="number"], select');
+        inputFields.forEach(field => {
+            field.addEventListener('input', calculateAll);
+        });
+
+        // Main calculation function
+        function calculateAll() {
+            const currency = document.getElementById('currency').value;
+            const productCost = parseFloat(document.getElementById('productCost').value) || 0;
+            const shippingCost = parseFloat(document.getElementById('shippingCost').value) || 0;
+            const packagingCost = parseFloat(document.getElementById('packagingCost').value) || 0;
+            const marketingCost = parseFloat(document.getElementById('marketingCost').value) || 0;
+            const platformFeeValue = parseFloat(document.getElementById('platformFee').value) || 0;
+            const additionalCosts = parseFloat(document.getElementById('additionalCosts').value) || 0;
+            const sellingPrice = parseFloat(document.getElementById('sellingPrice').value) || 0;
+
+            // Update price slider
+            priceSlider.value = sellingPrice;
+            updatePriceSlider(sellingPrice);
+
+            // Calculate total costs excluding platform fees percentage
+            let baseCosts = productCost + shippingCost + packagingCost + marketingCost + additionalCosts;
+
+            // Calculate platform fees
+            let platformFeesAmount = 0;
+            if (platformType.value !== 'custom') {
+                platformFeesAmount = (sellingPrice * platformFeeValue) / 100;
+            } else {
+                platformFeesAmount = platformFeeValue;
+            }
+
+            // Total costs including platform fees
+            const totalCosts = baseCosts + platformFeesAmount;
+
+            // Update slider max value based on costs
+            const maxPriceValue = Math.max(1000, Math.ceil(totalCosts * 3));
+            priceSlider.max = maxPriceValue;
+            document.getElementById('maxPrice').textContent = formatCurrency(maxPriceValue);
+
+            // Tax calculations
+            let taxAmount = 0;
+            if (taxToggle.checked) {
+                const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
+                taxAmount = (sellingPrice * taxRate) / 100;
+            }
+
+            // Profit calculations
+            const revenue = sellingPrice;
+            const profit = revenue - totalCosts - taxAmount;
+            const profitMargin = revenue > 0 ? (profit / revenue) * 100 : 0;
+
+            // Breakeven analysis
+            const breakevenSales = totalCosts > 0 && sellingPrice > totalCosts ? Math.ceil(totalCosts / (sellingPrice - totalCosts)) : 0;
+
+            // Suggested prices for different margins
+            const price20 = calculatePriceForMargin(totalCosts, 20);
+            const price30 = calculatePriceForMargin(totalCosts, 30);
+            const price50 = calculatePriceForMargin(totalCosts, 50);
+
+            // Monthly projections
+            const monthlySales = parseInt(document.getElementById('monthlySales').value) || 0;
+            const fixedExpenses = parseFloat(document.getElementById('fixedExpenses').value) || 0;
+            const monthlyRevenue = monthlySales * sellingPrice;
+            const monthlyProfit = (monthlySales * profit) - fixedExpenses;
+            const annualRevenue = monthlyRevenue * 12;
+            const annualProfit = monthlyProfit * 12;
+
+            // Update UI
+            document.getElementById('totalCosts').textContent = formatCurrency(totalCosts);
+            document.getElementById('taxAmount').textContent = formatCurrency(taxAmount);
+            document.getElementById('revenue').textContent = formatCurrency(revenue);
+            document.getElementById('profitPerProduct').textContent = formatCurrency(profit);
+            document.getElementById('profitMargin').textContent = `${profitMargin.toFixed(2)}%`;
+
+            // Update profit margin bar
+            const profitMarginBar = document.getElementById('profitMarginBar');
+            profitMarginBar.style.width = `${Math.min(Math.max(profitMargin, 0), 100)}%`;
+
+            // Update profit margin bar color
+            if (profitMargin < 0) {
+                profitMarginBar.classList.remove('bg-green-500', 'bg-yellow-500');
+                profitMarginBar.classList.add('bg-red-500');
+            } else if (profitMargin < 20) {
+                profitMarginBar.classList.remove('bg-green-500', 'bg-red-500');
+                profitMarginBar.classList.add('bg-yellow-500');
+            } else {
+                profitMarginBar.classList.remove('bg-yellow-500', 'bg-red-500');
+                profitMarginBar.classList.add('bg-green-500');
+            }
+
+            // Update breakeven analysis
+            document.getElementById('breakevenSales').textContent = breakevenSales;
+            document.getElementById('price20').textContent = formatCurrency(price20);
+            document.getElementById('price30').textContent = formatCurrency(price30);
+            document.getElementById('price50').textContent = formatCurrency(price50);
+
+            // Update monthly projections
+            document.getElementById('monthlyRevenue').textContent = formatCurrency(monthlyRevenue);
+            document.getElementById('monthlyProfit').textContent = formatCurrency(monthlyProfit);
+            document.getElementById('annualRevenue').textContent = formatCurrency(annualRevenue);
+            document.getElementById('annualProfit').textContent = formatCurrency(annualProfit);
+        }
+
+        // Format currency
+        function formatCurrency(value) {
+            const currency = document.getElementById('currency').value;
+            return `${currency}${value.toFixed(2)}`;
+        }
+
+        // Calculate total costs
+        function calculateTotalCosts() {
+            const productCost = parseFloat(document.getElementById('productCost').value) || 0;
+            const shippingCost = parseFloat(document.getElementById('shippingCost').value) || 0;
+            const packagingCost = parseFloat(document.getElementById('packagingCost').value) || 0;
+            const marketingCost = parseFloat(document.getElementById('marketingCost').value) || 0;
+            const platformFeeValue = parseFloat(document.getElementById('platformFee').value) || 0;
+            const additionalCosts = parseFloat(document.getElementById('additionalCosts').value) || 0;
+            const sellingPrice = parseFloat(document.getElementById('sellingPrice').value) || 0;
+
+            let baseCosts = productCost + shippingCost + packagingCost + marketingCost + additionalCosts;
+
+            let platformFeesAmount = 0;
+            if (platformType.value !== 'custom') {
+                platformFeesAmount = (sellingPrice * platformFeeValue) / 100;
+            } else {
+                platformFeesAmount = platformFeeValue;
+            }
+
+            return baseCosts + platformFeesAmount;
+        }
+
+        // Calculate price for a given margin
+        function calculatePriceForMargin(cost, targetMargin) {
+            if (cost <= 0) return 0;
+            return cost / (1 - (targetMargin / 100));
+        }
+
+        // Initialize calculations
+        calculateAll();
+
+        // Handle currency, tax, and monthly inputs
+        document.getElementById('currency').addEventListener('change', calculateAll);
+        taxType.addEventListener('change', calculateAll);
+        taxRate.addEventListener('input', calculateAll);
+        document.getElementById('monthlySales').addEventListener('input', calculateAll);
+        document.getElementById('fixedExpenses').addEventListener('input', calculateAll);
+    </script>
+</body>
+</html>
