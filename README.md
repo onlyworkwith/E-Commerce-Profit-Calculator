@@ -1,4 +1,4 @@
-📦 eCommerce Product Profit Calculator
+**📦 eCommerce Product Profit Calculator**
 
 A powerful and user-friendly web-based calculator designed to help eCommerce sellers accurately calculate product profitability, analyze costs, determine profit margins, and make smarter pricing decisions.
 
