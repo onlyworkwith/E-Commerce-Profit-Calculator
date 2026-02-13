@@ -4,8 +4,8 @@ A powerful and user-friendly web-based calculator designed to help eCommerce sel
 
 This tool is ideal for Amazon sellers, Shopify store owners, Flipkart sellers, Etsy sellers, and independent eCommerce businesses.
 
-🚀 Features
-💰 Complete Cost Breakdown
+**🚀 Features
+💰 Complete Cost Breakdown**
 
 Product Cost input with multi-currency support
 
@@ -15,7 +15,7 @@ Platform fees support (Amazon, Shopify, Etsy, eBay, Flipkart, Custom)
 
 Automatic total cost calculation
 
-📊 Profit & Margin Analysis
+**📊 Profit & Margin Analysis**
 
 Real-time Profit per Product calculation
 
@@ -25,7 +25,7 @@ Visual profit margin indicator bar
 
 Revenue calculation per sale
 
-🧾 Tax Support System
+**🧾 Tax Support System**
 
 GST (India), VAT (Europe), and Sales Tax (US)
 
@@ -33,13 +33,13 @@ Custom tax rate input
 
 Optional tax toggle system
 
-🎯 Breakeven Analysis
+**🎯 Breakeven Analysis**
 
 Calculates number of sales needed to break even
 
 Helps sellers understand minimum sales targets
 
-💡 Smart Price Suggestions
+**💡 Smart Price Suggestions**
 
 Automatically suggests selling prices for:
 
@@ -49,7 +49,7 @@ Automatically suggests selling prices for:
 
 50% Profit Margin
 
-🎮 Interactive Profit Simulator
+**🎮 Interactive Profit Simulator**
 
 Real-time selling price adjustment using slider
 
@@ -57,7 +57,7 @@ Live profit and margin simulation
 
 Instant feedback on pricing changes
 
-📈 Monthly & Annual Profit Projection
+**📈 Monthly & Annual Profit Projection**
 
 Monthly revenue calculation
 
@@ -69,7 +69,7 @@ Annual profit estimation
 
 Fixed expenses support
 
-🌍 Multi-Currency Support
+**🌍 Multi-Currency Support**
 
 Supports multiple currencies:
 
@@ -87,7 +87,7 @@ AUD (A$)
 
 CAD (C$)
 
-🌙 Dark Mode Support
+**🌙 Dark Mode Support**
 
 Toggle between Light and Dark mode
 
@@ -95,7 +95,7 @@ Smooth UI transitions
 
 Improved user experience
 
-⚡ Real-Time Calculations
+**⚡ Real-Time Calculations**
 
 Instant updates on every input change
 
@@ -103,7 +103,7 @@ No reload required
 
 Fast and responsive performance
 
-🛠️ Built With
+**🛠️ Built With**
 
 HTML5
 
@@ -115,7 +115,7 @@ JavaScript (Vanilla JS)
 
 Boxicons
 
-🎯 Use Cases
+**🎯 Use Cases**
 
 Perfect for:
 
@@ -133,7 +133,7 @@ eCommerce Beginners
 
 eCommerce Professionals
 
-📱 Responsive Design
+**📱 Responsive Design**
 
 Fully responsive and works on:
 
@@ -143,6 +143,6 @@ Tablet
 
 Mobile devices
 
-📷 Preview
+**📷 Preview**
 
 Interactive dashboard with cost breakdown, profit calculation, simulator, and projections.
